@@ -16,7 +16,7 @@ ui LayerWidget
 func initializeWidget override
 {
     base.initializeWidget()
-    var label = LabelWidget.forText(context,"Hello World")
+    var label = LabelWidget.forText(context,"Hello Worlds")
     vbox.addWidget(label)
 
 }
