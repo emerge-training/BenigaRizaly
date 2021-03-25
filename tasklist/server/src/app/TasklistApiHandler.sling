@@ -30,7 +30,7 @@ GET "/tasks"
     sendOk tasks
 }
 
-POST "/task"
+POST "/tasks"
 {
     var requestData = assert TaskRequest.forJsonString(req.getBodyString()):
         sendError  "invalidRequest"
