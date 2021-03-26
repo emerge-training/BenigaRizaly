@@ -2,8 +2,28 @@ import jk.widget.common
 
 class is TitledWidget #widget:
 
+pvar nameInput as TextInputWidget
+pvar descriptionInput as TextInputWidget
+
+model TasklistModel
+{
+    name as string
+    description as string
+}
+
 ui LayerWidget
 {
+     HorizontalScrollerWidget{
+        scrollBarDisabled = true
+        LayerWithBackgroundColorWidget container2{
+            color = Color.white()
+            HorizontalBoxWidget form {
+                margin = context.getHeightValue("5mm")
+                spacing = context.getHeightValue("5mm")
+            }
+        }
+    }
+
     VerticalScrollerWidget{
         scrollBarDisabled = true
         LayerWithBackgroundColorWidget container{
@@ -16,10 +36,14 @@ ui LayerWidget
     }
 }
 
+
 func initializeWidget override
 {
     base.initializeWidget()
+    declareWidgets
+
     APIClient.getInstance().getTasks(func(response as DynamicMap){
+
         var data = assert response.getDynamicMap("data")
         var records = data.getDynamicVector("records")
         if not records || records.getSize() < 1 {
@@ -35,6 +59,30 @@ func initializeWidget override
             }
         }
     })
+}
+
+func addingTask
+{
+    var task = new TasklistModel()
+    task.setName(nameInput.getWidgetText())
+    task.setDescription(descriptionInput.getWidgetText())
+
+    APIClient.getInstance().addTask(task.toDynamicMap(), func(result as DynamicMap){
+        list.addWidget(AlignWidget.forWidget(context, LabelWidget.forText(context, "Add Successful")), 1.0)
+    },func(err as Error){
+        list.addWidget(AlignWidget.forWidget(context, LabelWidget.forText(context, "Add Failed")), 1.0)
+    })
+}
+
+func declareWidgets
+{
+    nameInput = TextInputWidget.forType(context, 1,"Name: " )
+    descriptionInput = TextInputWidget.forType(context, 1,"Description: " )
+  //  var addbutton = TextButtonWidget.forText(context,"Add Tasklist", addingTask)
+    form.addWidget(nameInput)
+    form.addWidget(descriptionInput)
+    form.addWidget(addbutton)
+
 }
 
 func getWidgetTitle as string:
