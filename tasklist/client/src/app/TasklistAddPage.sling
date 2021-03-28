@@ -1,0 +1,83 @@
+import jk.widget.common
+
+class is TitledWidget #widget:
+
+ui LayerWidget
+{
+    CanvasWidget{
+        color = Color.instance("#949796")
+    }
+    VerticalScrollerWidget{
+        AlignWidget {
+            VerticalBoxWidget list {
+                margin = context.getHeightValue("5mm")
+                spacing = context.getHeightValue("5mm")
+                LabelWidget {
+                    text = "Task List App"
+                    textColor = Color.black()
+                    fontSize = context.getHeightValue("3mm")
+                    textAlign = LabelWidget.ALIGN_CENTER
+                    fontBold = true
+                }
+                TextInputWidget nameNote {
+                    type = TextInputWidget.TYPE_NAME
+                    placeholder = "Note Name: "
+                    fontSize = context.getHeightValue("2mm")
+                    padding = context.getHeightValue("2500um")
+                }
+                TextInputWidget descriptionNote {
+                    type = TextInputWidget.TYPE_NAME
+                    placeholder = "Description: "
+                    fontSize = context.getHeightValue("2mm")
+                    padding = context.getHeightValue("2500um")
+                }
+               
+            }
+
+            HorizontalBoxWidget{
+                spacing = context.getHeightValue("1000um")
+                TextButtonWidget btnAdd : 1.0{
+                    text = "Add Task"
+                    padding = context.getHeightValue("1000um")
+                    backgroundColor = Color.instance("#444444")
+                    clickHandler = func {
+                        taskAddClicked()
+                    }
+                }
+
+                TextButtonWidget btnBack : 1.0 {
+                    text = "Go back"
+                    padding = context.getHeightValue("1000um")
+			        backgroundColor = Color.instance("#444444")
+                    clickHandler = func {
+                        // taskGoback()
+                    }
+                }
+            }
+
+            VerticalBoxWidget{
+                margin = context.getHeightValue("5mm")
+                LabelWidget popNotif{
+                    text = ".."
+                    textColor = Color.black()
+                }
+            }
+            
+        }
+    }
+}
+
+func taskAddClicked
+{
+    var task = new TaskModel()
+    task.setName(nameNote.getWidgetText())
+    task.setDescription(descriptionNote.getWidgetText())
+    APIClient.getInstance().addTask(task.toDynamicMap(), func(res as DynamicMap){
+        popNotif.setWidget("Successful Added Task")
+    }, func(err as Error){
+        popNotif.setWidget("Failed to save task")
+    })
+
+}
+func getWidgetTitle as string:
+    return "Eqela Task list"

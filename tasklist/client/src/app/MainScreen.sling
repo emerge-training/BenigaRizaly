@@ -12,6 +12,6 @@ func initialize override
     navi.setWidgetEnableActionBar(false)
     setWidget(navi)
     APIClient.create(context, navi)
-    navi.pushWidget(new Tasklist(context))
+    navi.pushWidget(new TasklistAddPage(context))
 }
 
